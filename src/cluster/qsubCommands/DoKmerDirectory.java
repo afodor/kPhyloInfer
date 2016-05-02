@@ -55,16 +55,16 @@ public class DoKmerDirectory
 		{
 			if( s.toLowerCase().endsWith("fasta") ||s.toLowerCase().endsWith("fa") )
 			{
-				File aFile = new File(fastFileDir.getAbsolutePath() + File.separator + 
+				File aFile = new File(scriptDirectory.getAbsolutePath() + File.separator + 
 						"run_" + index + ".sh"	);
 				
 				BufferedWriter aWriter = new BufferedWriter(new FileWriter(aFile));
 				
-				aWriter.write("java -cp -mx20g " + ConfigReader.getJavaBinPath() + 
+				aWriter.write("java -Xmx20g -cp " + ConfigReader.getJavaBinPath() + 
 					" cluster.worker.MakeKmers "  + kmerSize + " " +
 								fastFileDir.getAbsolutePath() + File.separator + s + " " + 
 										kmerFileDir.getAbsolutePath() + File.separator + 
-											s + "kmers.txt"+ "\n");
+											s + "_kmers.txt"+ "\n");
 				
 				writer.write("qsub -q \"viper_batch\" " + aFile.getAbsolutePath() + "\n");
 				

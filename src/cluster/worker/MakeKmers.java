@@ -2,8 +2,11 @@ package cluster.worker;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
+import java.util.zip.GZIPOutputStream;
 
 import utils.FastaSequence;
 import utils.FastaSequenceOneAtATime;
@@ -41,9 +44,12 @@ public class MakeKmers
 			throw new Exception("kmer argument (first argument) must be a postive integer");
 		}
 		
-		HashMap<String, Integer> map = breakIntoKmers(fastaFile, kmerSize);
-			
 		File outFile = new File( args[2]);
+		
+		if( ! outFile.getName().toLowerCase().endsWith(".gz"))
+			throw new Exception("Output file must end in .gz");
+		
+		HashMap<String, Integer> map = breakIntoKmers(fastaFile, kmerSize);
 					
 		writeResults(outFile, map);
 		
@@ -65,7 +71,9 @@ public class MakeKmers
 	
 	private static void writeResults( File outFile, HashMap<String, Integer> map) throws Exception
 	{
-		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+		BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(
+				new GZIPOutputStream(new FileOutputStream(outFile))));
+		
 		
 		for(String s : map.keySet())
 			writer.write(s + "\t" + map.get(s) + "\n");

@@ -64,7 +64,7 @@ public class DoKmerDirectory
 					" cluster.worker.MakeKmers "  + kmerSize + " " +
 								fastFileDir.getAbsolutePath() + File.separator + s + " " + 
 										kmerFileDir.getAbsolutePath() + File.separator + 
-											s + "_kmers.txt"+ "\n");
+											s + "_kmers.txt.gz"+ "\n");
 				
 				writer.write("qsub -q \"viper_batch\" " + aFile.getAbsolutePath() + "\n");
 				

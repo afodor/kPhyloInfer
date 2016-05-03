@@ -10,8 +10,17 @@ K-mer analysis:
 	(Use MakeKmers for a single file)
 	Commands for CRE project:
 		cd <kPhyloInfer directory>
+		java -cp bin cluster.qsubCommands.DoKmerDirectory 12 /nobackup/afodor_research/af_broad/carolina /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/scripts/kmerCarolina
 		java -cp bin cluster.qsubCommands.DoKmerDirectory 12 /nobackup/afodor_research/af_broad/resistant /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/scripts/kmerResistant
 		java -cp bin cluster.qsubCommands.DoKmerDirectory 12 /nobackup/afodor_research/af_broad/susceptible /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/scripts/kmerSusceptible
+		
+		In each script directory:
 		chmod +x runAll.sh
 		./runAll.sh
+
 		
+RBH analysis:
+1. Generate fasta files for all genes in each genome: GeneFastas.java
+2. Generate BLAST databases for each genome: MakeBlastDB.java
+3. Run BLAST: BlastScripts.java
+4. Make ortholog tables: OrthologTables.java

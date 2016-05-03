@@ -21,6 +21,14 @@ K-mer analysis:
 2.  Generate the "all tree"; the distance matrix based on all of the kmers in all pairwise comparisons
 		java -cp /users/afodor/gitInstall/kPhyloInfer/bin cluster.worker.MakeMatrixWithAllKmers /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/allTreeDist.txt.gz
 
+
+3.  Next step: Generate Spearman distanecs to the all tree.
+
+	Input:  Reference Genome, start position, end position,window size, kmer directory, all tree file, output file,
+	number of nodes to run on it.
+	(Optional parameters would be Pearson, Spearman, both?;  Keep the distance matrices)
+	
+	
 		
 RBH analysis:
 1. Generate fasta files for all genes in each genome: GeneFastas.java

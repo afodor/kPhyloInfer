@@ -43,7 +43,7 @@ public class MakeMatrixWithAllKmers
 		{
 			File xFile = new File( kmerDir.getAbsolutePath() + File.separator +  files[x]);
 			
-			if( xFile.getName().toLowerCase().equals(EXPECTED_SUFFIX))
+			if( xFile.getName().toLowerCase().endsWith(EXPECTED_SUFFIX))
 			{
 				HashMap<String, Integer> xMap = getCounts(xFile);
 				long sumXSquared = getSumSquare(xMap);
@@ -52,7 +52,7 @@ public class MakeMatrixWithAllKmers
 				{
 					File yFile = new File( kmerDir.getAbsolutePath() + File.separator +  files[y]);
 					
-					if( yFile.getName().toLowerCase().equals(EXPECTED_SUFFIX))
+					if( yFile.getName().toLowerCase().endsWith(EXPECTED_SUFFIX))
 					{
 						HashMap<String, Integer> yMap = getCounts(yFile);
 						

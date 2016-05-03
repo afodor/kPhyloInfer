@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import utils.Translate;
 
@@ -29,7 +32,15 @@ public class MakeMatrixWithAllKmers
 			System.exit(1);
 		}
 		
-		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(args[1])));
+		if( ! args[1].toLowerCase().endsWith("gz"))
+		{
+			System.out.println("output file must end with gz");
+			System.exit(1);
+		}
+		
+		BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(
+				new GZIPOutputStream(new FileOutputStream(args[1]))));
+		
 		writer.write("genomeA\tgenomeB\tcosineDistance\n");
 		
 		File kmerDir = new File(args[0]);

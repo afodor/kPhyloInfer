@@ -58,6 +58,8 @@ public class MakeMatrixWithAllKmers
 						
 						writer.write(xFile.getName() + "\t" + yFile.getName() + "\t"
 								+ getDistance(xMap, yMap, sumXSquared) + "\n");
+						
+						writer.flush();
 					}
 				}
 			}

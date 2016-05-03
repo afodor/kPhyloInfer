@@ -1,0 +1,17 @@
+General setup:
+1. Clone the repository:
+	git clone https://github.com/afodor/kPhyloInfer.git
+2. In the bin folder, create a file called kPhyloInfer.properties
+3. In the properties file, add a JAVA_BIN_PATH variable:
+	JAVA_BIN_PATH=<path to bin>
+	
+K-mer analysis:
+1. Generate scripts to make k-mers from all fasta files in a directory: DoKmerDirectory
+	(Use MakeKmers for a single file)
+	Commands for CRE project:
+		cd <kPhyloInfer directory>
+		java -cp bin cluster.qsubCommands.DoKmerDirectory 12 /nobackup/afodor_research/af_broad/resistant /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/scripts/kmerResistant
+		java -cp bin cluster.qsubCommands.DoKmerDirectory 12 /nobackup/afodor_research/af_broad/susceptible /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/scripts/kmerSusceptible
+		chmod +x runAll.sh
+		./runAll.sh
+		

@@ -177,8 +177,10 @@ public class FastaSequence implements Comparable<FastaSequence>
 			String originalHeader = nextLine;
 			String header = originalHeader;
 			
-			if( ! header.startsWith(">"))
+			if( ! header.startsWith(">")) {
+				reader.close();
 				throw new Exception("Parsing error " + header);
+			}
 			
 			header = new StringTokenizer(header).nextToken();
 			header = header.substring(1);
@@ -200,6 +202,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 			}
 		}
 		
+		reader.close();
 		return returnList;
 	}
 	
@@ -254,8 +257,10 @@ public class FastaSequence implements Comparable<FastaSequence>
 			if( header.startsWith(">"))
 				header = header.substring(1);
 			
-			if( returnMap.containsKey(header))
+			if( returnMap.containsKey(header)) {
+				reader.close();
 				throw new Exception("Error!  Duplicate header");
+			}
 			
 			returnMap.put(header, originalHeader);
 			//System.out.println(header);
@@ -269,6 +274,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 			
 		}
 		
+		reader.close();
 		return returnMap;
 		
 	}
@@ -290,8 +296,10 @@ public class FastaSequence implements Comparable<FastaSequence>
 				if( header.startsWith(">"))
 					header = header.substring(1);
 				
-				if( map.keySet().contains(header) )
+				if( map.keySet().contains(header) ) {
+					reader.close();
 					throw new Exception("Duplicate key " + header);
+				}
 				
 				nextLine = reader.readLine();
 				
@@ -393,6 +401,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 			}				
 		}
 		
+		reader.close();
 		return list;
 	}
 	

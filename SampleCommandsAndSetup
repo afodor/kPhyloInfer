@@ -17,6 +17,9 @@ K-mer analysis:
 		In each script directory:
 		chmod +x runAll.sh
 		./runAll.sh
+		
+2.  Generate the "all tree"; the distance matrix based on all of the kmers in all pairwise comparisons
+		java -cp /users/afodor/gitInstall/kPhyloInfer/bin cluster.worker.MakeMatrixWithAllKmers /nobackup/afodor_research/carolinaRefactor/kmers /nobackup/afodor_research/carolinaRefactor/allTreeDist.txt.gz
 
 		
 RBH analysis:

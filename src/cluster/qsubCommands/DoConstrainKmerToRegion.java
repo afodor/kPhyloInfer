@@ -13,6 +13,7 @@ public class DoConstrainKmerToRegion
 {
 	private static BufferedWriter makeNewWriter( BufferedWriter allWriter, int fileNum, File scriptDir ) throws Exception
 	{
+		System.out.println("Got " + fileNum);
 		File aFile = new File(
 				scriptDir.getAbsolutePath() + File.separator + 
 					"run_" + fileNum + ".sh");
@@ -106,6 +107,7 @@ public class DoConstrainKmerToRegion
 		
 		int fileNum =0;
 		int index = 0;
+		int resultsIndex =1;
 		
 		BufferedWriter aWriter = makeNewWriter(allWriter, fileNum, scriptDir);
 		
@@ -132,9 +134,10 @@ public class DoConstrainKmerToRegion
 						+ "cluster.worker.ConstrainKMersToRegion "  + kmerSize + " " + genomePath.getAbsolutePath() + " " + 
 						 	contig  + " " + x + " " + end + " " + kmerDir.getAbsolutePath() + " " + 
 						 		allTreeFile.getAbsolutePath() + " " + resultsDiretory.getAbsolutePath() + File.separator + 
-						 			"results_" + fileNum + "\n");	
+						 			"results_" + resultsIndex + "\n");	
 				aWriter.flush();
 				index++;
+				resultsIndex++;
 				
 				if( index == numJobsPerNode)
 				{

@@ -5,10 +5,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -56,7 +56,7 @@ public class MakeMatrixWithAllKmers
 			
 			if( xFile.getName().toLowerCase().endsWith(EXPECTED_SUFFIX))
 			{
-				HashMap<String, Integer> xMap = getCounts(xFile);
+				HashMap<String, Integer> xMap = getCounts(xFile, null);
 				long sumXSquared = getSumSquare(xMap);
 				
 				for(int y=x; y < files.length; y++)
@@ -65,9 +65,10 @@ public class MakeMatrixWithAllKmers
 					
 					if( yFile.getName().toLowerCase().endsWith(EXPECTED_SUFFIX))
 					{
-						HashMap<String, Integer> yMap = getCounts(yFile);
+						HashMap<String, Integer> yMap = getCounts(yFile, null);
 						
-						writer.write(xFile.getName() + "\t" + yFile.getName() + "\t"
+						writer.write(xFile.getName().replaceAll("_" + EXPECTED_SUFFIX, "") 
+								+ "\t" + yFile.getName().replaceAll("_" + EXPECTED_SUFFIX, "") + "\t"
 								+ getDistance(xMap, yMap, sumXSquared) + "\n");
 						
 						writer.flush();
@@ -91,7 +92,7 @@ public class MakeMatrixWithAllKmers
 		return sum;
 	}
 	
-	static double getDistance(HashMap<String, Integer> aMap, HashMap<String, Integer> bMap,
+	static float getDistance(HashMap<String, Integer> aMap, HashMap<String, Integer> bMap,
 						long sumASquared) throws Exception
 	{
 		long sumBSquared = getSumSquare(bMap);
@@ -116,15 +117,18 @@ public class MakeMatrixWithAllKmers
 				
 		}
 			
-		return 1- topSum / Math.sqrt(sumASquared * sumBSquared);
+		return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
 	}
 	
 	/*
 	 * Key is the kmer
 	 * Integer is the # of times the kmers is present
 	 * inFile should be a .gz file with two columns (kmer and count) separated by a tap
+	 * 
+	 * If constraining set is null, it is ignored.
+	 * Otherwise only kmers that are in the constraining set will be included in the final count set
 	 */
-	static HashMap<String, Integer> getCounts(File inFile) throws Exception
+	static HashMap<String, Integer> getCounts(File inFile, HashSet<String> constrainingSet) throws Exception
 	{
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		
@@ -147,7 +151,8 @@ public class MakeMatrixWithAllKmers
 			if( map.containsKey(splits[0]))
 				throw new Exception("Duplicate kmer in " + inFile.getAbsolutePath() + " " + s+ splits[0]);
 			
-			map.put(splits[0], Integer.parseInt(splits[1]));
+			if( constrainingSet == null || constrainingSet.contains(splits[0]) )
+				map.put(splits[0], Integer.parseInt(splits[1]));
 		}
 		
 		reader.close();

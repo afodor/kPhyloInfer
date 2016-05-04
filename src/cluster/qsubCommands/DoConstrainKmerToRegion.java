@@ -30,23 +30,23 @@ public class DoConstrainKmerToRegion
 	{
 		if( args.length != 8)
 		{
-			System.out.println("usage kmerLength referenceGenomeFilepath windowSize kmerDirectory allTreeFile resultsDirectory numberOfNodes scriptDir");
+			System.out.println("usage kmerLength referenceGenomeFilepath windowSize kmerDirectory allTreeFile resultsDirectory numberOfJobsPerNodes scriptDir");
 			System.exit(1);
 		}
 		
-		Integer numNodes = null;
+		Integer numJobsPerNode = null;
 		
 		try
 		{
-			numNodes = Integer.parseInt(args[6]);
+			numJobsPerNode = Integer.parseInt(args[6]);
 		}
 		catch(Exception ex)
 		{
 			
 		}
 		
-		if( numNodes == null || numNodes <= 0 )
-			throw new Exception("Number of nodes must be a positive integer");
+		if( numJobsPerNode == null || numJobsPerNode <= 0 )
+			throw new Exception("Number of jobs per nodes must be a positive integer");
 		
 		File scriptDir = new File(args[7]);
 		
@@ -123,18 +123,20 @@ public class DoConstrainKmerToRegion
 			int length = seq.length();
 			int slice = Math.min(windowSize, length-1);
 			
-			for( int x=0; x < Math.max(length-(windowSize + 1000), 1); x = x + 1000)
+			for( int x=0; x < Math.max(length-slice, 1); x = x + 1000)
 			{
+				int end = Math.min(x+slice, length-1);
+				
 				//kmerLength referenceGenomeFilepath contig startPos endPos kmerDirectory allTreeFile  resultsFile
 				aWriter.write("java -cp  " + ConfigReader.getJavaBinPath() 
 						+ "cluster.worker.ConstrainKMersToRegion "  + kmerSize + " " + genomePath.getAbsolutePath() + " " + 
-						 	contig  + " " + x + " " + (x + slice) + " " + kmerDir.getAbsolutePath() + " " + 
+						 	contig  + " " + x + " " + end + " " + kmerDir.getAbsolutePath() + " " + 
 						 		allTreeFile.getAbsolutePath() + " " + resultsDiretory.getAbsolutePath() + File.separator + 
-						 			"results_" + fileNum + "\n");					
+						 			"results_" + fileNum + "\n");	
 				aWriter.flush();
 				index++;
 				
-				if( index == numNodes)
+				if( index == numJobsPerNode)
 				{
 					index=0;
 					fileNum++;

@@ -109,10 +109,10 @@ public class DoConstrainKmerToRegion
 		
 		BufferedWriter aWriter = makeNewWriter(allWriter, fileNum, scriptDir);
 		
-		File genomePath = new File(args[2]);
+		File genomePath = new File(args[1]);
 		
 		if( ! genomePath.exists())
-			throw new Exception("Could not find genome " + args[2]);
+			throw new Exception("Could not find genome " + args[1]);
 		
 		List<FastaSequence> list = FastaSequence.readFastaFile(genomePath);
 		

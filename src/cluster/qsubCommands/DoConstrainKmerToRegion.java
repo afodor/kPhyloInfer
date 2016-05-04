@@ -13,7 +13,6 @@ public class DoConstrainKmerToRegion
 {
 	private static BufferedWriter makeNewWriter( BufferedWriter allWriter, int fileNum, File scriptDir ) throws Exception
 	{
-		System.out.println("Got " + fileNum);
 		File aFile = new File(
 				scriptDir.getAbsolutePath() + File.separator + 
 					"run_" + fileNum + ".sh");
@@ -146,7 +145,7 @@ public class DoConstrainKmerToRegion
 					
 					aWriter.flush(); aWriter.close();
 					
-					aWriter = makeNewWriter(allWriter, fileNum,resultsDiretory);
+					aWriter = makeNewWriter(allWriter, fileNum,scriptDir);
 					
 				}
 			}

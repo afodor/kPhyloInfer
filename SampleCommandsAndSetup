@@ -24,10 +24,18 @@ K-mer analysis:
 
 3.  Next step: Generate Spearman distanecs to the all tree.
 
-	Input:  Reference Genome, start position, end position,window size, kmer directory, all tree file, output file,
-	number of nodes to run on it.
-	(Optional parameters would be Pearson, Spearman, both?;  Keep the distance matrices)
+
+	System.out.println("usage kmerLength referenceGenomeFilepath windowSize 
+	kmerDirectory allTreeFile resultsDirectory numberOfJobsPerNodes scriptDir");
 	
+	This generates the scripts (maybe):
+	
+		java -cp /users/afodor/gitInstall/kPhyloInfer/bin cluster.qsubCommands.DoConstrainKmerToRegion 
+		12 /nobackup/afodor_research/af_broad/carolina/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta 5000  
+		/nobackup/afodor_research/carolinaRefactor/kmers  
+		/nobackup/afodor_research/carolinaRefactor/allTreeDist.txt.gz 
+		/nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/results 
+		25 /nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/scripts
 	
 		
 RBH analysis:

@@ -39,7 +39,8 @@ public class ConstrainKMersToRegion
 			if( ! splits[0].equals(splits[1]) )
 			{
 
-				String key = getKey(splits[0], splits[1]);
+				String key = getKey(splits[0].replace("_" + MakeMatrixWithAllKmers.EXPECTED_SUFFIX, ""), 
+						splits[1].replace("_" + MakeMatrixWithAllKmers.EXPECTED_SUFFIX, ""));
 				
 				if( map.containsKey(key))
 					throw new Exception("Duplicate key " + key + " " + file.getAbsolutePath());

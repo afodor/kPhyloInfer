@@ -129,7 +129,7 @@ public class DoConstrainKmerToRegion
 				int end = Math.min(x+slice, length-1);
 				
 				//kmerLength referenceGenomeFilepath contig startPos endPos kmerDirectory allTreeFile  resultsFile
-				aWriter.write("java -cp  " + ConfigReader.getJavaBinPath() 
+				aWriter.write("java -Xmx20g -cp  " + ConfigReader.getJavaBinPath() 
 						+ " cluster.worker.ConstrainKMersToRegion "  + kmerSize + " " + genomePath.getAbsolutePath() + " " + 
 						 	contig  + " " + x + " " + end + " " + kmerDir.getAbsolutePath() + " " + 
 						 		allTreeFile.getAbsolutePath() + " " + resultsDiretory.getAbsolutePath() + File.separator + 

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import bitManipulations.Encode;
 import utils.FastaSequence;
 import utils.Spearman;
 import utils.Translate;
@@ -69,44 +70,120 @@ public class ConstrainKMersToRegion
 		return b + "@" + a;
 	}
 	
-	private static HashMap<String, Float> getResultsFromConstrained(File kmerDir, String[] files,
-				HashSet<String> constrainingSet) throws Exception
+	/*
+	 * The outer key is the genome name.
+	 * The inner key is a encoding of the k-mer (encoded with Encode.makeLong()
+	 * The inner value is the # of times that k-mer was seen in the genome
+	 */
+	private static HashMap<String, HashMap<Long,Integer>> getBigMap(File kmerDir, String[] files,
+			HashSet<String> constrainingSet) throws Exception
+	{
+		 HashMap<String, HashMap<Long,Integer>> bigMap  = new HashMap<String, HashMap<Long,Integer>>();
+		 
+		 for( int x=0; x < files.length; x++)
+			 
+		 {
+			 File xFile = new File( kmerDir.getAbsolutePath() + File.separator +  files[x]);
+			 
+			 if( xFile.getName().toLowerCase().endsWith( MakeMatrixWithAllKmers.EXPECTED_SUFFIX))
+			 {
+				 String key = xFile.getName().replace("_" + MakeMatrixWithAllKmers.EXPECTED_SUFFIX, "");
+				 
+				 if( bigMap.containsKey(key))
+					 throw new Exception("Duplicate key " + key);
+				 
+				 HashMap<String, Integer> countMap = MakeMatrixWithAllKmers.getCounts(xFile, constrainingSet);
+				 
+				 HashMap<Long, Integer> innerMap = new HashMap<Long,Integer>();
+				 bigMap.put(key, innerMap);
+				 
+				 for(String s : countMap.keySet())
+				 {
+					 long aVal = Encode.makeLong(s);
+					 
+					 if( innerMap.containsKey(aVal))
+						 throw new Exception("Duplicate long " + aVal + " " + s);
+					 
+					 innerMap.put(aVal, countMap.get(s));
+				 }
+			 }
+		 }
+		
+		 return bigMap;
+	}
+	
+
+	static long getSumSquare(HashMap<Long, Integer> counts)
+	{
+		long sum =0;
+		
+		for( Integer i : counts.values())
+			sum = sum + i * i;
+		
+		return sum;
+	}
+	
+	
+	/*
+	static float getDistance(HashMap<Long, Integer> aMap, HashMap<Long, Integer> bMap,
+			long sumASquared) throws Exception
+	{
+		long sumBSquared = getSumSquare(bMap);
+
+		long topSum = 0;
+
+		for( Long aLong : aMap.keySet() )
+		{
+			if( bMap.containsKey(aLong))
+			{
+				topSum += aMap.get(aLong) * bMap.get(aLong);
+			}
+			else
+			{
+				String reverse = Translate.reverseTranscribe(s);
+				
+				if( bMap.containsKey(reverse))
+				{
+					topSum += aMap.get(s) * bMap.get(reverse);
+				}
+			}
+		
+}
+
+return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
+}*/
+/*
+	
+	private static HashMap<String, Float> getResultsFromConstrained(
+				HashSet<String> constrainingSet, HashMap<String, HashMap<Long,Integer>> bigMap) throws Exception
 	{
 		HashMap<String, Float> resultsMap = new HashMap<String,Float>();
 		
-		for( int x=0; x < files.length-1; x++)
+		List<String> genomeNames =  new ArrayList<>( bigMap.keySet());
+		
+		for( int x=0; x < genomeNames.size()-1; x++)
 		{
-			File xFile = new File( kmerDir.getAbsolutePath() + File.separator +  files[x]);
-			
-			if( xFile.getName().toLowerCase().endsWith( MakeMatrixWithAllKmers.EXPECTED_SUFFIX))
-			{
-				HashMap<String, Integer> xMap = MakeMatrixWithAllKmers.getCounts(xFile, constrainingSet);
-				long sumXSquared = MakeMatrixWithAllKmers.getSumSquare(xMap);
+			HashMap<Long, Integer> xMap = bigMap.get(genomeNames.get(x));
+			long sumXSquared = getSumSquare(xMap);
 				
-				for(int y=x+1; y < files.length; y++)
-				{
-					File yFile = new File( kmerDir.getAbsolutePath() + File.separator +  files[y]);
+			for(int y=x+1; y < genomeNames.size(); y++)
+			{
+				HashMap<Long, Integer> yMap = bigMap.get(genomeNames.get(y));						
+						
+				String key = getKey(genomeNames.get(x), genomeNames.get(y));
+						
+				if( resultsMap.containsKey(key))
+					throw new Exception("Duplciate key " + key);
+						
+				resultsMap.put(key, MakeMatrixWithAllKmers.getDistance(xMap, yMap, sumXSquared));
 					
-					if( yFile.getName().toLowerCase().endsWith(MakeMatrixWithAllKmers.EXPECTED_SUFFIX))
-					{
-						HashMap<String, Integer> yMap = MakeMatrixWithAllKmers.getCounts(yFile, constrainingSet);
-						
-						
-						String key = getKey(xFile.getName(), yFile.getName());
-						
-						if( resultsMap.containsKey(key))
-							throw new Exception("Duplciate key " + key);
-						
-						resultsMap.put(key, MakeMatrixWithAllKmers.getDistance(xMap, yMap, sumXSquared));
-						
-					}
 				}
 			}
 		}
 		
 		return resultsMap;
 	}
-	
+	*/
 	public static void main(String[] args) throws Exception
 	{
 		if( args.length != 8)
@@ -148,11 +225,11 @@ public class ConstrainKMersToRegion
 		HashSet<String> set = getConstrainingSet(seq, kmerSize);
 		
 		HashMap<String, Float> resultsFromAllTree = parseDistanceFileIgnoringComparisonsToSame(allTreeFile);
-		HashMap<String, Float> resultsFromConstrainedSet = getResultsFromConstrained(kmerDir, files, set);
+		//HashMap<String, Float> resultsFromConstrainedSet = getResultsFromConstrained(kmerDir, files, set);
 		
-		writeResults(resultsFromConstrainedSet, resultsFromAllTree, 
-						new File(args[7]), new File(args[1]), args[2], Integer.parseInt(args[3]), 
-						Integer.parseInt(args[4]));
+	//	writeResults(resultsFromConstrainedSet, resultsFromAllTree, 
+		//				new File(args[7]), new File(args[1]), args[2], Integer.parseInt(args[3]), 
+			//			Integer.parseInt(args[4]));
 	}
 	
 	

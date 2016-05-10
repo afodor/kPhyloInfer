@@ -229,12 +229,13 @@ public class ConstrainKMersToRegion
 		
 		writeResults(resultsFromConstrainedSet,  resultsFromAllTree, 
 						new File(args[7]), new File(args[1]), args[2], Integer.parseInt(args[3]), 
-						Integer.parseInt(args[4]));
+						Integer.parseInt(args[4]), set, bigMap);
 	}
 	
 	
 	private static void writeResults( HashMap<String, Float> constrainedMap, HashMap<String, Float> allTree,
-			File outFile, File genomeFile, String contigName, int startPos, int endPos) throws Exception
+			File outFile, File genomeFile, String contigName, int startPos, int endPos,
+			HashSet<String> constrainedSet, HashMap<String, HashMap<Long, Integer>> bigMap) throws Exception
 	{
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
@@ -254,11 +255,29 @@ public class ConstrainKMersToRegion
 		Spearman s = Spearman.getSpear(list1, list2);
 		writer.write(" Spearman distance = " + s.getRs() + "\n");
 		writer.write(" Spearman p = " + s.getProbrs() + "\n");
-		writer.write(" Number of kmers in Spearman = " + list1.size() + "\n");
-		writer.write(" Number of kmers in all tree = " + allTree.size() + "\n");
+		writer.write(" Number of comparisons = " + list1.size() + "\n");
 		writer.write(" reference genome = " + genomeFile.getAbsolutePath() + "\n");
 		writer.write(" contig = " + contigName + "\n");
 		writer.write(" start to stop = "  + startPos + " " + endPos +  "\n");
+		writer.write(" Number of kmers in constraining set : " + constrainedSet.size() + "\n");
+		
+		double sum = 0;
+		int n=0;
+		
+		for( String s2 : bigMap.keySet())
+		{
+			sum += bigMap.get(s2).size();
+			n++;
+		}
+		
+		writer.write(" Average # of kmers in target genomes : " + sum / n  + "\n");
+		
+		writer.write("Unique k-mers for each genome \n" );
+		for( String s2 : bigMap.keySet())
+		{
+			writer.write(s2 + " " + bigMap.get(s).size() + "\n");
+		}
+		
 		
 		writer.flush(); writer.close();
 		

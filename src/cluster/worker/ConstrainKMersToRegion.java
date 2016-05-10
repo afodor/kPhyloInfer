@@ -123,10 +123,8 @@ public class ConstrainKMersToRegion
 		return sum;
 	}
 	
-	
-	/*
 	static float getDistance(HashMap<Long, Integer> aMap, HashMap<Long, Integer> bMap,
-			long sumASquared) throws Exception
+			long sumASquared, int kmerSize) throws Exception
 	{
 		long sumBSquared = getSumSquare(bMap);
 
@@ -140,22 +138,24 @@ public class ConstrainKMersToRegion
 			}
 			else
 			{
+				String s = Encode.getKmer(aLong, kmerSize);
 				String reverse = Translate.reverseTranscribe(s);
+				Long bLong = Encode.makeLong(reverse);
 				
-				if( bMap.containsKey(reverse))
+				if( bMap.containsKey( bLong))
 				{
-					topSum += aMap.get(s) * bMap.get(reverse);
+					topSum += aMap.get(aLong) * bMap.get(bLong);
 				}
 			}
 		
-}
+		}
 
-return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
-}*/
-/*
+		return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
+	}
 	
 	private static HashMap<String, Float> getResultsFromConstrained(
-				HashSet<String> constrainingSet, HashMap<String, HashMap<Long,Integer>> bigMap) throws Exception
+				HashSet<String> constrainingSet, HashMap<String, HashMap<Long,Integer>> bigMap,
+				int kmerSize) throws Exception
 	{
 		HashMap<String, Float> resultsMap = new HashMap<String,Float>();
 		
@@ -175,15 +175,13 @@ return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
 				if( resultsMap.containsKey(key))
 					throw new Exception("Duplciate key " + key);
 						
-				resultsMap.put(key, MakeMatrixWithAllKmers.getDistance(xMap, yMap, sumXSquared));
-					
-				}
+				resultsMap.put(key, getDistance(xMap, yMap, sumXSquared, kmerSize));
 			}
 		}
 		
 		return resultsMap;
 	}
-	*/
+	
 	public static void main(String[] args) throws Exception
 	{
 		if( args.length != 8)
@@ -223,13 +221,15 @@ return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
 		}
 		
 		HashSet<String> set = getConstrainingSet(seq, kmerSize);
+		HashMap<String, HashMap<Long,Integer>> bigMap =getBigMap(kmerDir, files, set);
 		
 		HashMap<String, Float> resultsFromAllTree = parseDistanceFileIgnoringComparisonsToSame(allTreeFile);
-		//HashMap<String, Float> resultsFromConstrainedSet = getResultsFromConstrained(kmerDir, files, set);
+				
+		HashMap<String, Float> resultsFromConstrainedSet = getResultsFromConstrained(set, bigMap, kmerSize);
 		
-	//	writeResults(resultsFromConstrainedSet, resultsFromAllTree, 
-		//				new File(args[7]), new File(args[1]), args[2], Integer.parseInt(args[3]), 
-			//			Integer.parseInt(args[4]));
+		writeResults(resultsFromConstrainedSet,  resultsFromAllTree, 
+						new File(args[7]), new File(args[1]), args[2], Integer.parseInt(args[3]), 
+						Integer.parseInt(args[4]));
 	}
 	
 	

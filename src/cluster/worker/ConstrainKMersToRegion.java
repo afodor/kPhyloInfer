@@ -253,9 +253,9 @@ public class ConstrainKMersToRegion
 			}
 		}
 		
-		Spearman s = Spearman.getSpear(list1, list2);
-		writer.write(" Spearman distance = " + s.getRs() + "\n");
-		writer.write(" Spearman p = " + s.getProbrs() + "\n");
+		Spearman spearman = Spearman.getSpear(list1, list2);
+		writer.write(" Spearman distance = " + spearman.getRs() + "\n");
+		writer.write(" Spearman p = " + spearman.getProbrs() + "\n");
 		writer.write(" Number of comparisons = " + list1.size() + "\n");
 		writer.write(" reference genome = " + genomeFile.getAbsolutePath() + "\n");
 		writer.write(" contig = " + contigName + "\n");
@@ -276,7 +276,7 @@ public class ConstrainKMersToRegion
 		writer.write("Unique k-mers for each genome \n" );
 		for( String s2 : bigMap.keySet())
 		{
-			writer.write(s2 + " " + bigMap.get(s).size() + "\n");
+			writer.write(s2 + " " + bigMap.get(s2).size() + "\n");
 		}
 		
 		

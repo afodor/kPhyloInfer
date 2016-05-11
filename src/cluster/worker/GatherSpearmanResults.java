@@ -29,14 +29,14 @@ public class GatherSpearmanResults
 	{
 		BufferedWriter writer =new BufferedWriter(new FileWriter(summaryFilePath));
 		
-		writer.write("referenceGenome" + "\t" + "contig" + "\t" + "numberOfKmersInGenome" + 
-					"\t" + "numberOfKmersInAllTree" + "\t" + "startPos" + "\t" + "endPos" + "\t" + 
+		writer.write("referenceGenome" + "\t" + "contig" + "\t" + "numberOfKmersInConstrainingSet" + 
+					"\t" + "AverageNumberOfKmersInGenome" + "\t" + "startPos" + "\t" + "endPos" + "\t" + 
 						"spearmanDistance" + "\n");
 		
 		for( Holder h : list)
 		{
-			writer.write( h.referenceGenome + "\t" + h.contig + "\t" + h.numberOfKmersInGenome+ "\t" + 
-						h.numberOfKmersInAllTree + "\t" + h.startPos + "\t" + h.endPos + "\t" + 
+			writer.write( h.referenceGenome + "\t" + h.contig + "\t" + h.numberOfKmersInConstrainingSet+ "\t" + 
+						h.averagenumberOfKmersInTargetGenomes+ "\t" + h.startPos + "\t" + h.endPos + "\t" + 
 								h.spearmanDistance + "\n");
 		}
 		
@@ -68,14 +68,15 @@ public class GatherSpearmanResults
 	private static Holder parseFile(String filepath) throws Exception
 	{
 		/*
-		Spearman s = Spearman.getSpear(list1, list2);
-		writer.write(" Spearman distance = " + s.getRs() + "\n");
-		writer.write(" Spearman p = " + s.getProbrs() + "\n");
-		writer.write(" Number of kmers in Spearman = " + list1.size() + "\n");
-		writer.write(" Number of kmers in all tree = " + allTree.size() + "\n");
-		writer.write(" reference genome = " + genomeFile.getAbsolutePath() + "\n");
-		writer.write(" contig = " + contigName + "\n");
-		writer.write(" start to stop = "  + startPos + " " + endPos +  "\n");
+		 Spearman distance = 0.5086806409453566
+ 		Spearman p = 0.0
+ 		Number of comparisons = 57291
+ 		reference genome = /nobackup/afodor_research/af_broad/carolina/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
+ 		contig = 7000000220927533
+ 		start to stop = 531000 536000
+ 		 Number of kmers in constraining set : 4984
+ 		 Average # of kmers in target genomes : 2882.2064896755164
+		Unique k-mers for each genome
 		*/
 		
 		BufferedReader reader =new BufferedReader(new FileReader(new File(filepath)));
@@ -83,9 +84,7 @@ public class GatherSpearmanResults
 		Holder h = new Holder();
 		
 		h.spearmanDistance = extractDouble(reader.readLine(), " Spearman distance = ");
-		reader.readLine();
-		h.numberOfKmersInGenome = extractLong( reader.readLine(), " Number of kmers in Spearman = ");
-		h.numberOfKmersInAllTree = extractLong(reader.readLine(),  " Number of kmers in all tree = ");
+		reader.readLine(); reader.readLine();
 		h.referenceGenome = extractString(reader.readLine(), " reference genome = ");
 		h.contig= extractString(reader.readLine(), " reference genome = ");
 		
@@ -95,6 +94,8 @@ public class GatherSpearmanResults
 		
 		h.startPos = Long.parseLong(sToken.nextToken());
 		h.endPos = Long.parseLong(sToken.nextToken());
+		h.numberOfKmersInConstrainingSet = extractLong(reader.readLine(), " Number of kmers in constraining set : ");
+		h.averagenumberOfKmersInTargetGenomes = extractFloat(reader.readLine(), " Average # of kmers in target genomes :");
 		
 		if( sToken.hasMoreTokens())
 			throw new Exception("Unexpected format");
@@ -110,6 +111,15 @@ public class GatherSpearmanResults
 			throw new Exception("Unexpected format");
 		
 		return Double.parseDouble(line.replace(prefix, ""));
+		
+	}
+	
+	private static float extractFloat( String line, String prefix )  throws Exception
+	{
+		if( ! line.startsWith(prefix) )
+			throw new Exception("Unexpected format");
+		
+		return Float.parseFloat(line.replace(prefix, ""));
 		
 	}
 	
@@ -131,13 +141,14 @@ public class GatherSpearmanResults
 		
 	}
 	
+	
 	private static class Holder implements Comparable<Holder>
 	{
 		double spearmanDistance;
 		String referenceGenome;
 		String contig;
-		long numberOfKmersInGenome;
-		long numberOfKmersInAllTree;
+		long numberOfKmersInConstrainingSet;
+		float averagenumberOfKmersInTargetGenomes;
 		long startPos;
 		long endPos;
 		

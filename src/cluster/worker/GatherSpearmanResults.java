@@ -105,7 +105,7 @@ public class GatherSpearmanResults
 		h.spearmanDistance = extractDouble(reader.readLine(), " Spearman distance = ");
 		reader.readLine(); reader.readLine();
 		h.referenceGenome = extractString(reader.readLine(), " reference genome = ");
-		h.contig= extractString(reader.readLine(), "contig = ");
+		h.contig= extractString(reader.readLine(), " contig = ");
 		
 		String last =reader.readLine().replace(" start to stop = ", "");
 		

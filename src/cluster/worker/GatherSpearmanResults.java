@@ -54,10 +54,12 @@ public class GatherSpearmanResults
 		
 		String[] fileNames = resultsDir.list();
 		
+		System.out.println("Attempting to parse " + resultsDir.getAbsolutePath());
+		
 		List<Holder> list = new ArrayList<Holder>();
 		
 		for(String s : fileNames)
-			if( s.startsWith("result_"))
+			if( s.startsWith("results_"))
 			{
 				list.add(parseFile(resultsDir.getAbsolutePath() + File.separator + s));
 			}

@@ -303,8 +303,7 @@ public class ConstrainKMersToRegion
 	
 	private static HashSet<String> getConstrainingSet(String seq, int kmerLength) throws Exception
 	{	
-		HashMap<String, Integer> map = new HashMap<String,Integer>();
-		
+		HashSet<String> set = new HashSet<String>();
 		
 		for( int x=0; x < seq.length()- kmerLength; x++)
 		{
@@ -312,11 +311,11 @@ public class ConstrainKMersToRegion
 			
 			if( MakeKmers.isACGT(sub))
 			{
-				MakeKmers.addToMap(map, seq, kmerLength);
+				set.add(sub);
+				set.add(Translate.reverseTranscribe(sub));
 			}
 		}
 		
-		MakeKmers.checkForNoReverse(map);
 		
 		return new HashSet<String>(map.keySet());
 	}

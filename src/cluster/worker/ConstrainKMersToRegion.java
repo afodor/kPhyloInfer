@@ -301,6 +301,10 @@ public class ConstrainKMersToRegion
 		throw new Exception("No");
 	}
 	
+	/*
+	 * The constraining set has both orientations.
+	 * The k-mers it is compared against should be constrained to only check one of the two..
+	 */
 	private static HashSet<String> getConstrainingSet(String seq, int kmerLength) throws Exception
 	{	
 		HashSet<String> set = new HashSet<String>();
@@ -317,7 +321,7 @@ public class ConstrainKMersToRegion
 		}
 		
 		
-		return new HashSet<String>(map.keySet());
+		return set;
 	}
 	
 	public static void addToMap(HashMap<String, Integer> map, String seq, int kmerLength) throws Exception

@@ -30,13 +30,14 @@ public class GatherSpearmanResults
 		BufferedWriter writer =new BufferedWriter(new FileWriter(summaryFilePath));
 		
 		writer.write("referenceGenome" + "\t" + "contig" + "\t" + "numberOfKmersInConstrainingSet" + 
-					"\t" + "AverageNumberOfKmersInGenome" + "\t" + "startPos" + "\t" + "endPos" + "\t" + 
+					"\t" + "AverageNumberOfKmersInGenome" + "\t" + "numberOfZeroKmers\t" + 
+								"startPos" + "\t" + "endPos" + "\t" + 
 						"spearmanDistance" + "\n");
 		
 		for( Holder h : list)
 		{
 			writer.write( h.referenceGenome + "\t" + h.contig + "\t" + h.numberOfKmersInConstrainingSet+ "\t" + 
-						h.averagenumberOfKmersInTargetGenomes+ "\t" + h.startPos + "\t" + h.endPos + "\t" + 
+						h.averagenumberOfKmersInTargetGenomes+ "\t" + h.numZeros + "\t" +  h.startPos + "\t" + h.endPos + "\t" + 
 								h.spearmanDistance + "\n");
 		}
 		
@@ -63,6 +64,22 @@ public class GatherSpearmanResults
 		
 		Collections.sort(list);
 		return list;
+	}
+	
+	private static void countZeros(BufferedReader reader , Holder h) throws Exception
+	{
+		for(String s= reader.readLine(); s != null; s= reader.readLine())
+		{
+			StringTokenizer sToken = new StringTokenizer(s);
+			sToken.nextToken();
+		
+			if( Integer.parseInt(sToken.nextToken()) == 0 )
+				h.numZeros++;
+			
+			if( sToken.hasMoreTokens())
+				throw new Exception("Unexpected format " + s);
+			
+		}
 	}
 	
 	private static Holder parseFile(String filepath) throws Exception
@@ -94,11 +111,16 @@ public class GatherSpearmanResults
 		
 		h.startPos = Long.parseLong(sToken.nextToken());
 		h.endPos = Long.parseLong(sToken.nextToken());
-		h.numberOfKmersInConstrainingSet = extractLong(reader.readLine(), " Number of kmers in constraining set : ");
-		h.averagenumberOfKmersInTargetGenomes = extractFloat(reader.readLine(), " Average # of kmers in target genomes :");
 		
 		if( sToken.hasMoreTokens())
 			throw new Exception("Unexpected format");
+		
+		h.numberOfKmersInConstrainingSet = extractLong(reader.readLine(), " Number of kmers in constraining set : ");
+		h.averagenumberOfKmersInTargetGenomes = extractFloat(reader.readLine(), " Average # of kmers in target genomes :");
+		
+		reader.readLine();
+		
+		countZeros(reader, h);
 		
 		reader.close();
 		
@@ -141,7 +163,6 @@ public class GatherSpearmanResults
 		
 	}
 	
-	
 	private static class Holder implements Comparable<Holder>
 	{
 		double spearmanDistance;
@@ -151,6 +172,8 @@ public class GatherSpearmanResults
 		float averagenumberOfKmersInTargetGenomes;
 		long startPos;
 		long endPos;
+		
+		int numZeros =0;
 		
 		@Override
 		public int compareTo(Holder o)

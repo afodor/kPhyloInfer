@@ -76,7 +76,7 @@ public class ConstrainKMersToRegion
 	 * The inner key is a encoding of the k-mer (encoded with Encode.makeLong()
 	 * The inner value is the # of times that k-mer was seen in the genome
 	 */
-	private static HashMap<String, HashMap<Integer,Integer>> getBigMap(File kmerDir, String[] files,
+	static HashMap<String, HashMap<Integer,Integer>> getBigMap(File kmerDir, String[] files,
 			HashSet<String> constrainingSet) throws Exception
 	{
 		 HashMap<String, HashMap<Integer,Integer>> bigMap  = new HashMap<String, HashMap<Integer,Integer>>();
@@ -154,7 +154,7 @@ public class ConstrainKMersToRegion
 		return (float) (1- topSum / Math.sqrt(sumASquared * sumBSquared));
 	}
 	
-	private static HashMap<String, Float> getResultsFromConstrained(
+	static HashMap<String, Float> getResultsFromConstrained(
 				HashSet<String> constrainingSet, HashMap<String, HashMap<Integer,Integer>> bigMap,
 				int kmerSize) throws Exception
 	{
@@ -284,7 +284,7 @@ public class ConstrainKMersToRegion
 		
 	}
 	
-	private static String getConstrainingString(String filepath, String contig, int startPos, int endPos) throws Exception
+	static String getConstrainingString(String filepath, String contig, int startPos, int endPos) throws Exception
 	{
 		List<FastaSequence> list = 
 				FastaSequence.readFastaFile(
@@ -305,7 +305,7 @@ public class ConstrainKMersToRegion
 	 * The constraining set has both orientations.
 	 * The k-mers it is compared against should be constrained to only check one of the two..
 	 */
-	private static HashSet<String> getConstrainingSet(String seq, int kmerLength) throws Exception
+	static HashSet<String> getConstrainingSet(String seq, int kmerLength) throws Exception
 	{	
 		HashSet<String> set = new HashSet<String>();
 		

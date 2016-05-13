@@ -147,14 +147,13 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 		
 		File resultsDir = new File(args[4]);
 		
-		if(! resultsDir.exists())
-			throw new Exception("Could not find " + resultsDir.getAbsolutePath());
+		if(! resultsDir.exists() || ! resultsDir.isDirectory())
+			throw new Exception(resultsDir.getAbsolutePath() + " must be a valid directory");
 		
 		File kMerDir = new File(args[3]);
 		
-		if(! kMerDir.exists())
-			throw new Exception("Could not find " + kMerDir.getAbsolutePath());
-		
+		if(! kMerDir.exists() || ! kMerDir.isDirectory())
+			throw new Exception( kMerDir.getAbsolutePath() + " must be a valid directory");
 		
 		
 		HashMap<String, FastaSequence> fastaMap = FastaSequence.getFirstTokenSequenceMap(referenceGenome);

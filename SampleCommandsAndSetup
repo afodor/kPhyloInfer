@@ -44,7 +44,8 @@ K-mer analysis:
 		/nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/summary/resultsSummaryRef11.txt
 	
 5.  Write chunk file
-	java -cp /users/afodor/gitInstall/kPhyloInfer/bin chunks.FindChunksAcrossMultipleContigs /nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/summary/resultsSummaryRef11.txt /nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/summary/chunkSummaryRef11.txt 0.9 0.95
+	java -cp /users/afodor/gitInstall/kPhyloInfer/bin chunks.FindChunksAcrossMultipleContigs /nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/summary/resultsSummaryRef11.txt 
+		/nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/summary/chunkSummaryRef11.txt 0.9 0.95
 		
 RBH analysis:
 1. Generate fasta files for all genes in each genome: GeneFastas.java

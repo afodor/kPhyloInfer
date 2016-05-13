@@ -140,7 +140,7 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 		
 		HashMap<String, List<Holder>> contigMap = getAsContigMap(chunkFile);
 		
-		File referenceGenome = new File(args[6]);
+		File referenceGenome = new File(args[5]);
 		
 		if(! referenceGenome.exists())
 			throw new Exception("Could not find " + referenceGenome.getAbsolutePath());

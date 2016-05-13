@@ -36,6 +36,12 @@ K-mer analysis:
 		/nobackup/afodor_research/carolinaRefactor/allTreeDist.txt.gz 
 		/nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/results 
 		25 /nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/scripts
+		
+4. Gather the results into a single spreadsheet
+
+	java -cp /users/afodor/gitInstall/kPhyloInfer/bin cluster.worker.GatherSpearmanResults 
+	/nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/results 
+		/nobackup/afodor_research/carolinaRefactor/rollingWindowsToAllTree/summary/resultsSummaryRef11.txt
 	
 		
 RBH analysis:

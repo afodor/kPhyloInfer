@@ -2,43 +2,43 @@ package bitManipulations;
 
 public class Encode
 {
-	private static final Long A_LONG = new Long(0x0000l);
-	private static final Long C_LONG = new Long(0x0001l);
-	private static final Long G_LONG = new Long(0x0002l);
-	private static final Long T_LONG = new Long(0x0003l);
+	private static final Integer A_INT = new Long(0x0000l).intValue();
+	private static final Integer C_INT = new Long(0x0001l).intValue();
+	private static final Integer G_INT = new Long(0x0002l).intValue();
+	private static final Integer T_INT = new Long(0x0003l).intValue();
 	
-	public static String getKmer(Long l, int kmerLength)  throws Exception
+	public static String getKmer(Integer i, int kmerLength)  throws Exception
 	{
 		StringBuffer buff = new StringBuffer();
 		
-		Long start = T_LONG;
+		int start = T_INT;
 		
 		while(kmerLength > 0)
 		{
-			long myChar = l & start;
+			long myChar = i & start;
 			
-			if( myChar == A_LONG )
+			if( myChar == A_INT )
 				buff.append("A");
 			
-			if( myChar == C_LONG)
+			if( myChar == C_INT)
 				buff.append("C");
 			
-			if( myChar == G_LONG)
+			if( myChar == G_INT)
 				buff.append("G");
 			
-			if( myChar == T_LONG)
+			if( myChar == T_INT)
 				buff.append("T");
 			
-			l = l >> 2;
+			i = i >> 2;
 			kmerLength--;
 		}
 		
 		return buff.toString();
 	}
 	
-	public static long makeLong( String s) throws Exception
+	public static int makeInteger( String s) throws Exception
  	{
-		long val =0;
+		int val =0;
 		
 		if( s.length() > 16)
 			throw new Exception("Can't encode");
@@ -49,19 +49,19 @@ public class Encode
 			
 			if( c== 'A')
 			{
-				val =val | ( A_LONG << (x*2));
+				val =val | ( A_INT << (x*2));
 			} 
 			else if ( c== 'C')
 			{
-				val = val | (C_LONG << (x*2) );
+				val = val | (C_INT << (x*2) );
 			}
 			else if ( c== 'G')
 			{
-				val = val | (G_LONG << (x*2) );
+				val = val | (G_INT << (x*2) );
 			}
 			else if ( c == 'T')
 			{
-				val = val | (T_LONG << (x*2));
+				val = val | (T_INT << (x*2));
 			}
 			else throw new Exception("Unexpected character " + c);
 		}
@@ -72,9 +72,9 @@ public class Encode
 	
 	public static void main(String[] args) throws Exception
 	{
-		String s = "TTTTTTTTTT";
+		String s = "CGATTACTACCGAGAC";
 	
-		long aLong = makeLong(s);
+		int aLong = makeInteger(s);
 		System.out.println( Long.toBinaryString(aLong));
 		
 		String kmer = getKmer(aLong, s.length());

@@ -76,10 +76,10 @@ public class ConstrainKMersToRegion
 	 * The inner key is a encoding of the k-mer (encoded with Encode.makeLong()
 	 * The inner value is the # of times that k-mer was seen in the genome
 	 */
-	private static HashMap<String, HashMap<Long,Integer>> getBigMap(File kmerDir, String[] files,
+	private static HashMap<String, HashMap<Integer,Integer>> getBigMap(File kmerDir, String[] files,
 			HashSet<String> constrainingSet) throws Exception
 	{
-		 HashMap<String, HashMap<Long,Integer>> bigMap  = new HashMap<String, HashMap<Long,Integer>>();
+		 HashMap<String, HashMap<Integer,Integer>> bigMap  = new HashMap<String, HashMap<Integer,Integer>>();
 		 
 		 for( int x=0; x < files.length; x++)
 			 
@@ -95,12 +95,12 @@ public class ConstrainKMersToRegion
 				 
 				 HashMap<String, Integer> countMap = MakeMatrixWithAllKmers.getCounts(xFile, constrainingSet);
 				 
-				 HashMap<Long, Integer> innerMap = new HashMap<Long,Integer>();
+				 HashMap<Integer, Integer> innerMap = new HashMap<Integer,Integer>();
 				 bigMap.put(key, innerMap);
 				 
 				 for(String s : countMap.keySet())
 				 {
-					 long aVal = Encode.makeLong(s);
+					 int aVal = Encode.makeInteger(s);
 					 
 					 if( innerMap.containsKey(aVal))
 						 throw new Exception("Duplicate long " + aVal + " " + s);
@@ -114,7 +114,7 @@ public class ConstrainKMersToRegion
 	}
 	
 
-	static long getSumSquare(HashMap<Long, Integer> counts)
+	static long getSumSquare(HashMap<Integer, Integer> counts)
 	{
 		long sum =0;
 		
@@ -124,28 +124,28 @@ public class ConstrainKMersToRegion
 		return sum;
 	}
 	
-	static float getDistance(HashMap<Long, Integer> aMap, HashMap<Long, Integer> bMap,
+	static float getDistance(HashMap<Integer, Integer> aMap, HashMap<Integer, Integer> bMap,
 			long sumASquared, int kmerSize) throws Exception
 	{
 		long sumBSquared = getSumSquare(bMap);
 
 		long topSum = 0;
 
-		for( Long aLong : aMap.keySet() )
+		for( Integer i : aMap.keySet() )
 		{
-			if( bMap.containsKey(aLong))
+			if( bMap.containsKey(i))
 			{
-				topSum += aMap.get(aLong) * bMap.get(aLong);
+				topSum += aMap.get(i) * bMap.get(i);
 			}
 			else
 			{
-				String s = Encode.getKmer(aLong, kmerSize);
+				String s = Encode.getKmer(i, kmerSize);
 				String reverse = Translate.reverseTranscribe(s);
-				Long bLong = Encode.makeLong(reverse);
+				Integer bVal= Encode.makeInteger(reverse);
 				
-				if( bMap.containsKey( bLong))
+				if( bMap.containsKey( bVal))
 				{
-					topSum += aMap.get(aLong) * bMap.get(bLong);
+					topSum += aMap.get(i) * bMap.get(bVal);
 				}
 			}
 		
@@ -155,7 +155,7 @@ public class ConstrainKMersToRegion
 	}
 	
 	private static HashMap<String, Float> getResultsFromConstrained(
-				HashSet<String> constrainingSet, HashMap<String, HashMap<Long,Integer>> bigMap,
+				HashSet<String> constrainingSet, HashMap<String, HashMap<Integer,Integer>> bigMap,
 				int kmerSize) throws Exception
 	{
 		HashMap<String, Float> resultsMap = new HashMap<String,Float>();
@@ -164,12 +164,12 @@ public class ConstrainKMersToRegion
 		
 		for( int x=0; x < genomeNames.size()-1; x++)
 		{
-			HashMap<Long, Integer> xMap = bigMap.get(genomeNames.get(x));
+			HashMap<Integer, Integer> xMap = bigMap.get(genomeNames.get(x));
 			long sumXSquared = getSumSquare(xMap);
 				
 			for(int y=x+1; y < genomeNames.size(); y++)
 			{
-				HashMap<Long, Integer> yMap = bigMap.get(genomeNames.get(y));						
+				HashMap<Integer, Integer> yMap = bigMap.get(genomeNames.get(y));						
 						
 				String key = getKey(genomeNames.get(x), genomeNames.get(y));
 						
@@ -222,7 +222,7 @@ public class ConstrainKMersToRegion
 		}
 		
 		HashSet<String> set = getConstrainingSet(seq, kmerSize);
-		HashMap<String, HashMap<Long,Integer>> bigMap =getBigMap(kmerDir, files, set);
+		HashMap<String, HashMap<Integer,Integer>> bigMap =getBigMap(kmerDir, files, set);
 		
 		HashMap<String, Float> resultsFromAllTree = parseDistanceFileIgnoringComparisonsToSame(allTreeFile);
 				
@@ -236,7 +236,7 @@ public class ConstrainKMersToRegion
 	
 	private static void writeResults( HashMap<String, Float> constrainedMap, HashMap<String, Float> allTree,
 			File outFile, File genomeFile, String contigName, int startPos, int endPos,
-			HashSet<String> constrainedSet, HashMap<String, HashMap<Long, Integer>> bigMap) throws Exception
+			HashSet<String> constrainedSet, HashMap<String, HashMap<Integer, Integer>> bigMap) throws Exception
 	{
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));

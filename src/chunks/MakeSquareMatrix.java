@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import utils.Spearman;
@@ -30,6 +31,8 @@ public class MakeSquareMatrix
 		writeResults(topDir, args[1]);
 	} 	
 	
+	
+	
 	private static void writeResults( File topDir, String outFilePath ) throws Exception
 	{
 		String[] files = topDir.list();
@@ -42,6 +45,8 @@ public class MakeSquareMatrix
 		
 		Collections.sort(list);
 		
+		HashMap<String, HashMap<String,Float>> bigMap = getBigMap(list);
+		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 			outFilePath	)));
 		
@@ -50,11 +55,11 @@ public class MakeSquareMatrix
 			System.out.println( x + " " + list.size());
 			writer.write(list.get(x).getName().replace(".txt", ""));
 			
-			HashMap<String, Float> xMap = parseFile(list.get(x));
+			HashMap<String, Float> xMap = bigMap.get(list.get(x).getName().replace(".txt", ""));
 			
 			for( int y=0; y < list.size(); y++)
 			{
-				HashMap<String, Float> yMap = parseFile(list.get(y));
+				HashMap<String, Float> yMap = bigMap.get(list.get(y).getName().replace(".txt", ""));
 				writer.write("\t" + getDistance(xMap, yMap));
 				
 			}
@@ -63,6 +68,23 @@ public class MakeSquareMatrix
 		}
 		
 		writer.flush();  writer.close();
+	}
+	
+	private static HashMap<String, HashMap<String,Float>> getBigMap(List<File> fileList) throws Exception
+	{
+		HashMap<String, HashMap<String,Float>>  map = new LinkedHashMap<String, HashMap<String,Float>>();
+		
+		for(File f : fileList)
+		{
+			String key = f.getName().replace(".txt", "");
+			
+			if( map.containsKey(key))
+				throw new Exception("Duplicate key " + key);
+			
+			map.put(key, parseFile(f));
+		}
+		
+		return map;
 	}
 	
 	private static double getDistance(HashMap<String, Float> map1, HashMap<String, Float> map2)

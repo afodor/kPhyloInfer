@@ -17,7 +17,7 @@ import utils.FastaSequence;
 
 public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 {	
-	private static void writeOne(BufferedWriter allWriter, File scriptDirectory,
+	private static void writeOneIfFileDoesNotExist(BufferedWriter allWriter, File scriptDirectory,
 			File genomePath, File outFileDirectory, File kmerDir,
 			String contig,
 				int startPos, int endPos, int index, String type, int kmerSize) 
@@ -29,19 +29,27 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 		String outFileBase = genomePath.getName().replace(".scaffolds.fasta", "") 
 					+ "_" + contig + "_" + startPos + "_" + endPos + "_" + type + ".txt";
 		
-		BufferedWriter aWriter = new BufferedWriter(new FileWriter(shFile));
+		File outFile = new File( outFileDirectory.getAbsolutePath() + File.separator + outFileBase);
+		
+		if( !outFile.exists())
+		{
 			
-		allWriter.write("qsub -q \"viper\" " +  shFile.getAbsolutePath() + "\n");
-			
-		aWriter.write("java -Xmx20g -cp  " + ConfigReader.getJavaBinPath() 
-		+ " cluster.worker.WriteDistanceMatrixFromConstrainedRegion "  
+			BufferedWriter aWriter = new BufferedWriter(new FileWriter(shFile));
+				
+			allWriter.write("qsub -q \"viper\" " +  shFile.getAbsolutePath() + "\n");
+				
+			aWriter.write("java -Xms20g -cp  " + ConfigReader.getJavaBinPath() 
+			+ " cluster.worker.WriteDistanceMatrixFromConstrainedRegion "  
 					+ kmerSize + " " + genomePath.getAbsolutePath() + " " + 
-		 	contig  + " " + startPos + " " + endPos + " " + kmerDir.getAbsolutePath() + " " + 
-		 	outFileDirectory.getAbsolutePath() + File.separator + outFileBase +  "\n");	
-			
-			allWriter.flush(); 
-			
-			aWriter.flush();  aWriter.close();
+			 	contig  + " " + startPos + " " + endPos + " " + kmerDir.getAbsolutePath() + " " + 
+						outFile.getAbsolutePath() + 
+			 	 "\n");	
+				
+				allWriter.flush(); 
+				
+				aWriter.flush();  aWriter.close();
+
+		}
 	}
 	
 	private static class Holder
@@ -172,7 +180,7 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 			if( list.size() == 1)
 			{
 				Holder h = list.get(0);
-				writeOne(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
+				writeOneIfFileDoesNotExist(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
 								contig, h.start, h.end, index,"singleton", kmerSize);
 				index++;
 			}
@@ -183,7 +191,7 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 				
 				if( list.get(0).start >0)
 				{
-					writeOne(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
+					writeOneIfFileDoesNotExist(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
 							contig, 0, list.get(0).start -1000, index,"initialBaseline", kmerSize);
 					
 					index++;
@@ -192,7 +200,7 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 				while(listIndex < list.size() -1)
 				{
 					
-					writeOne(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
+					writeOneIfFileDoesNotExist(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
 							contig, list.get(listIndex).start, list.get(listIndex).end, index,"peak", kmerSize);
 					
 					index++;
@@ -212,7 +220,7 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 						if( endPos - list.get(listIndex-1).end+1000 >= 5000)
 						{
 							
-							writeOne(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
+							writeOneIfFileDoesNotExist(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
 									contig, list.get(listIndex-1).end+1000,endPos, index,type, kmerSize);
 							
 							
@@ -229,7 +237,7 @@ public class WriteScriptsForChunkDistanceMatricesWithAllContigs
 			if( ! includedContigs.contains(s))
 			{
 
-				writeOne(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
+				writeOneIfFileDoesNotExist(allWriter, scriptDir, referenceGenome, resultsDir,kMerDir,
 						s, 0,fastaMap.get(s).getSequence().length()-1, index,"singleton", kmerSize);
 				
 				index++;

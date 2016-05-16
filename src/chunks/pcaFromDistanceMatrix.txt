@@ -15,4 +15,4 @@ cumsum(myCmdScale$eig)
 
 names = attributes(myCmdScale$points)$dimnames[[1]]
 
-write.table( myCmdScale$points, file= "chunks_pcoaAllContigs.txt", sep = "\t", col.names= )
+write.table( myCmdScale$points, file= "chunks_pcoaAllContigs.txt", sep = "\t")

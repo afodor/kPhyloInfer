@@ -1,0 +1,18 @@
+rm( list=ls())
+
+setwd("C:\\af_broad\\carolinaRefactor")
+
+myT <- read.table("partialChunkSummary.txt", sep="\t", row.names=1)
+
+myT <- 1 - myT
+
+myCmdScale <- cmdscale( myT, k=10, eig = TRUE)
+
+eig / sum(eig)
+
+plot( myCmdScale$points[,1], myCmdScale$points[,2])
+
+
+names = attributes(myCmdScale$points)$dimnames[[1]]
+
+write.table( myCmdScale$points, file= "chunks_pcoaAllContigs.txt", sep = "\t" )

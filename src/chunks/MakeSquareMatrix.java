@@ -27,8 +27,8 @@ public class MakeSquareMatrix
 		if( ! topDir.exists() || ! topDir.isDirectory())
 			throw new Exception(args[0] + "  is not a valid directory");
 		
-		
-	}
+		writeResults(topDir, args[1]);
+	} 	
 	
 	private static void writeResults( File topDir, String outFilePath ) throws Exception
 	{
@@ -47,6 +47,7 @@ public class MakeSquareMatrix
 		
 		for( int x=0;x  < list.size(); x++ )
 		{
+			System.out.println( x + " " + list.size());
 			writer.write(list.get(x).getName().replace(".txt", ""));
 			
 			HashMap<String, Float> xMap = parseFile(list.get(x));

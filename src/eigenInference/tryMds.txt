@@ -1,5 +1,12 @@
 rm(list=ls())
+library("vegan")
 
 setwd("C:\\carolinaRefactor")
 
-myT <- read.table("resampledAt_2000.txt", sep="\t", header=TRUE)
+myT <- read.table("resampledAt_200replacedColumns.txt", sep="\t", header=TRUE,row.names=1)
+
+myMDS <- capscale(myT~1,distance="bray")
+
+write.table(myMDS$CA$u, sep="\t", file="mds.txt",col.names=NA)
+write.table(myMDS$CA$eig,file="eigenValues_.txt",sep="\t", col.names=NA)
+

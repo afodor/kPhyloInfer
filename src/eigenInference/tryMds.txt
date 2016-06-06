@@ -1,0 +1,5 @@
+rm(list=ls())
+
+setwd("C:\\carolinaRefactor")
+
+myT <- read.table("resampledAt_2000.txt", sep="\t", header=TRUE)

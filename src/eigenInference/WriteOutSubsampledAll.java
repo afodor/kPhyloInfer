@@ -16,7 +16,7 @@ public class WriteOutSubsampledAll
 {
 	private static final Random RANDOM = new Random(324234);
 	
-	private static final int NUMBER_KMERS_PER_SAMPLE = 2000;
+	private static final int NUMBER_KMERS_PER_SAMPLE = 200;
 	
 	private static final File IN_KMER_DIRECTORY = 
 		new File("/nobackup/afodor_research/carolinaRefactor/kmers");

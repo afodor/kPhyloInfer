@@ -19,12 +19,13 @@ public class WriteOutSubsampledAll
 	private static final int NUMBER_KMERS_PER_SAMPLE = 2000;
 	
 	private static final File IN_KMER_DIRECTORY = 
-		new File("/nobackup/afodor_research/carolinaRefactor/resampled_" + NUMBER_KMERS_PER_SAMPLE);
+		new File("/nobackup/afodor_research/carolinaRefactor/kmers");
 	
 	private static void writeResampledFile(  HashSet<String> set) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(
-			IN_KMER_DIRECTORY	));
+			IN_KMER_DIRECTORY.getParentFile().getAbsoluteFile() + File.separator +
+				"resampledAt_" + NUMBER_KMERS_PER_SAMPLE + ".txt"));
 		
 		List<String> list = new ArrayList<String>(set);
 		Collections.sort(list);

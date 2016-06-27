@@ -128,7 +128,7 @@ public class MakeMatrixWithAllKmers
 	 * If constraining set is null, it is ignored.
 	 * Otherwise only kmers that are in the constraining set will be included in the final count set
 	 */
-	static HashMap<String, Integer> getCounts(File inFile, HashSet<String> constrainingSet) throws Exception
+	public static HashMap<String, Integer> getCounts(File inFile, HashSet<String> constrainingSet) throws Exception
 	{
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		
